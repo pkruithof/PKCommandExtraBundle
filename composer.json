@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "PK\\PKCommandExtraBundle": ""
+            "PK\\CommandExtraBundle": ""
         }
     },
     "target-dir": "PK/CommandExtraBundle"
