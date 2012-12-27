@@ -60,4 +60,4 @@ protected function configure()
 }
 ```
 
-For tips and/or feature requests, please don't hesitate to [add an issue](https://github.com/pkruithof/CommandExtraBundle/issues/new).
+For tips and/or feature requests, please don't hesitate to [add an issue](https://github.com/pkruithof/PKCommandExtraBundle/issues/new).
