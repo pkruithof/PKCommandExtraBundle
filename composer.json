@@ -1,0 +1,26 @@
+{
+    "name": "pk/command-extra-bundle",
+    "type": "symfony-bundle",
+    "description": "Bundle that adds some flavor to Symfony2's commands",
+    "keywords": ["command"],
+    "homepage": "http://github.com/pkruithof/PKCommandExtraBundle",
+    "authors": [
+        {
+            "name": "Peter Kruithof",
+            "email": "pkruithof@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": ">=2.0,<2.3-dev"
+    },
+    "suggest": {
+        "ext-posix": "to enable support for single-processed commands"
+    },
+    "autoload": {
+        "psr-0": {
+            "PK\\PKCommandExtraBundle": ""
+        }
+    },
+    "target-dir": "PK/CommandExtraBundle"
+}

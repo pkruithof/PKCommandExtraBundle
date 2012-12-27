@@ -1,0 +1,23 @@
+<?php
+
+namespace PK\CommandExtraBundle\DependencyInjection;
+
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+
+class Configuration implements ConfigurationInterface
+{
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('pk_command_extra');
+
+        $rootNode
+            ->children()
+                ->booleanNode('pid_dir')->defaultValue('%kernel.root_dir%/data')->end()
+            ->end()
+        ;
+
+        return $treeBuilder;
+    }
+}
