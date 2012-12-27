@@ -187,9 +187,10 @@ abstract class Command extends ContainerAwareCommand
 
         $statusCode = parent::run($input, $output);
 
+        $timeEnd = new \DateTime();
+
         if ($this->isSummarized('time')) {
 
-            $timeEnd = new \DateTime();
             $diff = $timeStart->diff($timeEnd);
 
             $output->writeln(sprintf(
@@ -206,7 +207,8 @@ abstract class Command extends ContainerAwareCommand
             $peak = memory_get_peak_usage();
 
             $output->writeln(sprintf(
-                'Consumed %s (peak: %s)',
+                '[%s] Consumed <info>%s</info> (peak: <info>%s</info>)',
+                $timeEnd->format('Y-m-d H:i:s'),
                 $this->formatBytes($memEnd - $memStart),
                 $this->formatBytes($peak)
             ));
