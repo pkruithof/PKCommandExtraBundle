@@ -7,6 +7,9 @@ use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @author Peter Kruithof <pkruithof@gmail.com>
+ */
 abstract class Command extends ContainerAwareCommand
 {
     private $singleProcessed = false;
