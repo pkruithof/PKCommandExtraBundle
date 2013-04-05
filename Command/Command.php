@@ -29,7 +29,7 @@ abstract class Command extends ContainerAwareCommand
      */
     public function getEntityManager()
     {
-        return $this->get('doctrine')->getEntityManager();
+        return $this->get('doctrine')->getManager();
     }
 
     /**
