@@ -1,0 +1,49 @@
+# inherit the next configuration down the chain
+inherit: true
+
+filter:
+    paths: [src/*]
+
+before_commands:
+    - composer install --dev
+
+tools:
+    php_code_coverage: true
+
+    php_code_sniffer:
+        config:
+            standard: PSR2
+
+    php_cs_fixer:
+        config:
+            level: all
+
+    php_analyzer:
+        config:
+            checkstyle:
+                enabled: true
+            verify_php_doc_comments:
+                enabled: true
+                suggest_more_specific_types: true
+                ask_for_return_if_not_inferrable: true
+                ask_for_param_type_annotation: true
+            simplify_boolean_return:
+                enabled: true
+            phpunit_checks:
+                enabled: true
+            doc_comment_fixes:
+                enabled: true
+            reflection_fixes:
+                enabled: true
+
+    php_mess_detector:
+        config:
+            rulesets:
+                - codesize
+                - design
+                - unusedcode
+                - naming
+
+    php_cpd: true
+
+    sensiolabs_security_checker: true

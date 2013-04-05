@@ -10,7 +10,7 @@ Add the following to your composer.json:
 ```json
 {
     "require": {
-        "pk/command-extra-bundle": "dev-master"
+        "pk/command-extra-bundle": "1.*"
     }
 }
 ```

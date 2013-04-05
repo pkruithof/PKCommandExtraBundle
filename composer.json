@@ -18,9 +18,6 @@
         "ext-posix": "to enable support for single-processed commands"
     },
     "autoload": {
-        "psr-0": {
-            "PK\\CommandExtraBundle": ""
-        }
-    },
-    "target-dir": "PK/CommandExtraBundle"
+        "psr-0": { "FM": "src/" }
+    }
 }
