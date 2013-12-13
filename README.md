@@ -54,7 +54,7 @@ protected function configure()
         ->setDefinition(array())
         ->setName('foo:bar')
         ->isSingleProcessed()
-        ->preventLogging()
+        ->disableLoggers()
         ->setSummarizeDefinition(array('memory' => false))
     ;
 }
