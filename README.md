@@ -42,7 +42,7 @@ The bundle mainly provides a class that you can extend your commands with. It's 
 By extending the class you can call three methods in the configure method:
 
 * `isSingleProcessed()`: This sets a flag indicating that this command can only run one at a time. Useful when you're starting the command with a cronjob, preventing multiple running instances. Requires the [posix](http://php.net/manual/en/book.posix.php) extension loaded.
-* `preventLogging()`: By default, a lot of information is being logged. If you don't need this information, or want your command to consume less memory (this depends on your setup of course, YMMV), this turns off logging for Doctrine and the default logger service.
+* `disableLoggers()`: By default, a lot of information is being logged. If you don't need this information, or want your command to consume less memory (this depends on your setup of course, YMMV), this turns off logging for Doctrine and the default logger service.
 * `setSummarizeDefinition()`: For now, only the time and memory consumed are logged at the beginning and end of the command. This method controls which of these are logged. Both are logged by default.
 
 Example:
