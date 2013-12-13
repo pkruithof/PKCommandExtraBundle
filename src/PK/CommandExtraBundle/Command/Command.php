@@ -45,7 +45,7 @@ abstract class Command extends ContainerAwareCommand
     }
 
     /**
-     * @return Symfony\Component\Console\Helper\DialogHelper
+     * @return \Symfony\Component\Console\Helper\DialogHelper
      */
     public function getDialogHelper()
     {
