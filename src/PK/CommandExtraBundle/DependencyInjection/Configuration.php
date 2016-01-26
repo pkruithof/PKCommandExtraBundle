@@ -10,6 +10,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -17,7 +20,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('pid_dir')->defaultValue('%kernel.root_dir%/var/run')->end()
+                ->booleanNode('pid_dir')->defaultValue('%kernel.root_dir%/../var/run')->end()
             ->end()
         ;
 
