@@ -4,21 +4,12 @@ This bundle adds some sugar to the default [ContainerAwareCommand](https://githu
 
 Installation
 ------------
-Installation for Symfony 3.0 (and up) via [composer](http://getcomposer.org):
+Installation for Symfony 3.0 (and up):
 
-Add the following to your composer.json:
-```json
-{
-    "require": {
-        "pk/command-extra-bundle": "^2.0"
-    }
-}
-```
-
-Update dependency:
+Require the dependency through [Composer](http://getcomposer.org):
 
 ```bash
-composer.phar update pk/command-extra-bundle
+composer.phar require pk/command-extra-bundle
 ```
 
 Register bundle:
