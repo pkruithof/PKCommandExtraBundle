@@ -2,8 +2,9 @@
 
 namespace PK\CommandExtraBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Handler\NullHandler;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,105 +13,27 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class Command extends ContainerAwareCommand
 {
+    /**
+     * @var bool
+     */
     private $singleProcessed = false;
-    private $disabledLoggers = array();
-    private $summaries = array(
-        'time'   => true,
-        'memory' => false
-    );
-
-    public function get($serviceId)
-    {
-        return $this->getContainer()->get($serviceId);
-    }
 
     /**
-     * @return \Doctrine\ORM\EntityManager
+     * @var array
      */
-    public function getEntityManager()
-    {
-        return $this->get('doctrine')->getManager();
-    }
+    private $disabledLoggers = [];
 
     /**
-     * @return string
+     * @var array
      */
-    public function getPidFile()
-    {
-        return sprintf(
-            '%s/%s.pid',
-            $this->getContainer()->getParameter('pk.command_extra.pid_dir'),
-            str_replace(':', '.', $this->getName())
-        );
-    }
+    private $summaries = [
+        'time' => true,
+        'memory' => false,
+    ];
 
     /**
-     * @return \Symfony\Component\Console\Helper\DialogHelper
+     * @inheritdoc
      */
-    public function getDialogHelper()
-    {
-        $dialog = $this->getHelperSet()->get('dialog');
-        if (!$dialog) {
-            $this->getHelperSet()->set($dialog = new DialogHelper());
-        }
-
-        return $dialog;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isSummarized($type)
-    {
-        return array_key_exists($type, $this->summaries) && $this->summaries[$type] === true;
-    }
-
-    /**
-     * @deprecated Use disableLoggers instead
-     */
-    public function preventLogging(array $extraLoggers = array())
-    {
-        trigger_error('Use disableLoggers() instead', E_USER_DEPRECATED);
-
-        return $this->disableLoggers($extraLoggers);
-    }
-
-    /**
-     * Disables common loggers during command. This can be useful when working
-     * with large amounts of data.
-     *
-     * @param array $extraLoggers Optional extra loggers you want disabled
-     */
-    public function disableLoggers(array $extraLoggers = array())
-    {
-        $this->disabledLoggers = array_merge(array('monolog.logger.doctrine', 'logger'), $extraLoggers);
-
-        return $this;
-    }
-
-    /**
-     * If set to true, the command can only run by one process at a time.
-     */
-    public function isSingleProcessed()
-    {
-        $this->singleProcessed = true;
-
-        return $this;
-    }
-
-    public function setSummarizeDefinition(array $definition)
-    {
-        foreach ($definition as $type => $bool) {
-            if (!array_key_exists($type, $this->summaries)) {
-                throw new \InvalidArgumentException(sprintf('Summary "%s" is not defined'));
-            }
-
-            $this->summaries[$type] = (boolean) $bool;
-        }
-
-        return $this;
-    }
-
     public function run(InputInterface $input, OutputInterface $output)
     {
         $timeStart = new \DateTime();
@@ -129,7 +52,6 @@ abstract class Command extends ContainerAwareCommand
         $timeEnd = new \DateTime();
 
         if ($this->isSummarized('time')) {
-
             $diff = $timeStart->diff($timeEnd);
 
             $output->writeln(sprintf(
@@ -141,7 +63,6 @@ abstract class Command extends ContainerAwareCommand
         }
 
         if ($this->isSummarized('memory')) {
-
             $memEnd = memory_get_usage();
             $peak = memory_get_peak_usage();
 
@@ -157,18 +78,91 @@ abstract class Command extends ContainerAwareCommand
     }
 
     /**
-     * Adds NullHandler to the major logs to prevent them from further handling.
+     * @param string $serviceId
      *
-     * @param  string $serviceId A service id
+     * @return object
      */
-    protected function disableLogger($serviceId)
+    protected function get($serviceId)
     {
-        if ($this->getContainer()->has($serviceId)) {
-            $logger = $this->get($serviceId);
-            $logger->pushHandler(new \Monolog\Handler\NullHandler());
-        }
+        return $this->getContainer()->get($serviceId);
     }
 
+    /**
+     * @param string $name The object manager name (null for the default one).
+     *
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected function getDoctrineManager($name = null)
+    {
+        return $this->get('doctrine')->getManager($name);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPidFile()
+    {
+        return sprintf(
+            '%s/%s.pid',
+            $this->getContainer()->getParameter('pk.command_extra.pid_dir'),
+            str_replace(':', '.', $this->getName())
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isSummarized($type)
+    {
+        return array_key_exists($type, $this->summaries) && $this->summaries[$type] === true;
+    }
+
+    /**
+     * Disables common loggers during command. This can be useful when working
+     * with large amounts of data.
+     *
+     * @param array $extraLoggers Optional extra loggers you want disabled
+     *
+     * @return $this
+     */
+    protected function disableLoggers(array $extraLoggers = [])
+    {
+        $this->disabledLoggers = array_merge(['monolog.logger.doctrine', 'logger'], $extraLoggers);
+
+        return $this;
+    }
+
+    /**
+     * If set to true, the command can only run by one process at a time.
+     */
+    protected function isSingleProcessed()
+    {
+        $this->singleProcessed = true;
+
+        return $this;
+    }
+
+    /**
+     * @param array $definition
+     *
+     * @return $this
+     */
+    protected function setSummarizeDefinition(array $definition)
+    {
+        foreach ($definition as $type => $bool) {
+            if (!array_key_exists($type, $this->summaries)) {
+                throw new \InvalidArgumentException(sprintf('Summary "%s" is not defined'));
+            }
+
+            $this->summaries[$type] = (boolean) $bool;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         if ($this->singleProcessed) {
@@ -180,6 +174,22 @@ abstract class Command extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Adds NullHandler to the major logs to prevent them from further handling.
+     *
+     * @param string $serviceId A service id
+     */
+    protected function disableLogger($serviceId)
+    {
+        if ($this->getContainer()->has($serviceId)) {
+            $logger = $this->get($serviceId);
+            $logger->pushHandler(new NullHandler());
+        }
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
     protected function makeCommandSingleProcessed(OutputInterface $output)
     {
         // we need posix support for this
@@ -241,12 +251,12 @@ abstract class Command extends ContainerAwareCommand
     {
         $bytes = (int) $bytes;
 
-        if ($bytes > 1024*1024) {
-            return round($bytes/1024/1024, 2).' MB';
+        if ($bytes > 1024 * 1024) {
+            return round($bytes / 1024 / 1024, 2).' MB';
         } elseif ($bytes > 1024) {
-            return round($bytes/1024, 2).' KB';
+            return round($bytes / 1024, 2).' KB';
         }
 
-        return $bytes . ' B';
+        return $bytes.' B';
     }
 }

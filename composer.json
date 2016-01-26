@@ -12,7 +12,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": "~2.0"
+        "doctrine/doctrine-bundle": "^1.5",
+        "doctrine/orm": "^2.5",
+        "monolog/monolog": "^1.7",
+        "symfony/framework-bundle": "^3.0"
     },
     "suggest": {
         "ext-posix": "to enable support for single-processed commands"
