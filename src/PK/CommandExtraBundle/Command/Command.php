@@ -2,7 +2,6 @@
 
 namespace PK\CommandExtraBundle\Command;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Handler\NullHandler;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
