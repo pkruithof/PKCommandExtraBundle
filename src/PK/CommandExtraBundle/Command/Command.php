@@ -34,6 +34,20 @@ abstract class Command extends ContainerAwareCommand
     /**
      * @inheritdoc
      */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        if ($this->singleProcessed) {
+            $this->makeCommandSingleProcessed($output);
+        }
+
+        foreach ($this->disabledLoggers as $service) {
+            $this->disableLogger($service);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function run(InputInterface $input, OutputInterface $output)
     {
         $timeStart = new \DateTime();
@@ -158,20 +172,6 @@ abstract class Command extends ContainerAwareCommand
         }
 
         return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function initialize(InputInterface $input, OutputInterface $output)
-    {
-        if ($this->singleProcessed) {
-            $this->makeCommandSingleProcessed($output);
-        }
-
-        foreach ($this->disabledLoggers as $service) {
-            $this->disableLogger($service);
-        }
     }
 
     /**
